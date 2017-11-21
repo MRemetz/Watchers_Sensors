@@ -6,8 +6,9 @@ start() ->
     {ok, [N]} = io:fread("enter number of sensors> ", "~d"),
     if N =< 1 ->
           io:fwrite("setup: range must be at least 2~n", []);
-       true -> 
-         setup_loop(N) 
+       true ->
+         Num_watchers = 1 + (N div 10),
+         setup_loop(N)
  end.
 
 
@@ -15,7 +16,7 @@ setup_loop(N) when N =< 10 ->
 	Wid = spawn(?MODULE, make_watcher, [self(), [{X, Y} || X <- lists:seq(1, N), Y <- [1]], N]),
 	io:format("watcher Id: ~w~n", [Wid]);
 
-setup_loop(N) when N>10 ->
+setup_loop(N, Int) when N>10 ->
 	Wid = spawn(?MODULE, make_watcher, [self(), [{X, Y} || X <- lists:seq(N-9, N), Y <-	[1]], 10]),
 	io:format("watcher Id: ~w~n", [Wid]),
 	setup_loop(N-10).
@@ -35,4 +36,3 @@ watcher(Sensor_list) ->
 	%if receives crash, print sensor number, and crash
 	%	spawn_monitor for that Sid, print updated list
 	%	call itself with updated Sensor_list
-
