@@ -7,7 +7,6 @@ start() ->
     if N =< 1 ->
           io:fwrite("setup: range must be at least 2~n", []);
        true ->
-         Num_watchers = 1 + (N div 10),
          setup_loop(N)
  end.
 
@@ -16,18 +15,18 @@ setup_loop(N) when N =< 10 ->
 	Wid = spawn(?MODULE, make_watcher, [self(), [{X, Y} || X <- lists:seq(1, N), Y <- [1]], N]),
 	io:format("watcher Id: ~w~n", [Wid]);
 
-setup_loop(N, Int) when N>10 ->
+setup_loop(N) when N>10 ->
 	Wid = spawn(?MODULE, make_watcher, [self(), [{X, Y} || X <- lists:seq(N-9, N), Y <-	[1]], 10]),
 	io:format("watcher Id: ~w~n", [Wid]),
 	setup_loop(N-10).
 
-make_watcher(WatcherId, Sensor_list, 0) ->
+make_watcher(Wid, Sensor_list, 0) ->
 	watcher(Sensor_list);
 
-make_watcher(WatcherId, Sensor_list, N) when N>=1->
+make_watcher(Wid, Sensor_list, N) when N>=1->
 	Sid = lists:nth(N, Sensor_list),
-	{Pid, _} = spawn_monitor(?MODULE, sensor, [Sid, WatcherId]),
-	make_watcher(WatcherId, lists:keyreplace(Sid, 1, Sensor_list, {Sid, Pid}), N-1).
+	{Pid, _} = spawn_monitor(?MODULE, sensor, [Sid, Wid]),
+	make_watcher(Wid, lists:keyreplace(Sid, 1, Sensor_list, {Sid, Pid}), N-1).
 
 watcher(Sensor_list) ->
 	io:format("necessary print in watcher REMOVE ME LATER").
