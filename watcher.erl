@@ -13,11 +13,10 @@ start() ->
 
 
 setup_loop(N, 1) ->
-	Wid = spawn(?MODULE, make_watcher, [self(), [{X, Y} || X <- lists:seq(1, N), Y <- [0]], N]);
+	Wid = spawn(?MODULE, make_watcher, [self(), [{X, Y} || X <- lists:seq(1, N), Y <- 1], N]);
 
 setup_loop(N, Num_watchers) when N>10 ->
-	Wid = spawn(?MODULE, make_watcher, [self(), [{X, Y} || X <- lists:seq(N-9, N), Y <-
-														   [0]], 10]),
+	Wid = spawn(?MODULE, make_watcher, [self(), [{X, Y} || X <- lists:seq(N-9, N), Y <-	1], 10]),
 	setup_loop(N-10, Num_watchers-1).
 
 make_watcher(Wid, Sensor_list, 0) ->
