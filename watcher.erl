@@ -27,6 +27,7 @@ make_watcher(Sensor_list, N) when N>=1->
 
 watcher(Sensor_list) ->
 	receive
-		{Sid, Measurement} -> io:format("Measurement from ~w~n : ~w~n", [Sid, Measurement]);
-		{exit, Sid, Reason} -> io:format("~w~n exited with reason: ~w~n", [Sid, Reason]).
+		{Sid, Measurement} -> io:format("Received measurement ~w from sensor ~w~n",[self(),Sid,Measurement]),
+							  watcher(Sensor_list)
+		%{exit, Sid, Reason} -> io:format("~w~n exited with reason: ~w~n", [Sid, Reason])
 	end. 
