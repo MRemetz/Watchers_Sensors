@@ -1,5 +1,6 @@
 -module(sensor).
 -compile(export_all).
 
-run_sensor(Wid, Sid) ->
-	io:format("created").
+sensor(Wid, Sid) ->
+	io:format("Wid: ~w~n", [Wid]),
+	io:format("Sid: ~w~n", [Sid]).

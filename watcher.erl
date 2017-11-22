@@ -9,12 +9,11 @@ start() ->
          setup_loop(N)
  end.
 
-
 setup_loop(N) when N =< 10 ->
-	Wid = spawn(?MODULE, make_watcher, [[[X, Y] || X <- lists:seq(1, N), Y <- [1]], N]);
+	spawn(?MODULE, make_watcher, [[[X, Y] || X <- lists:seq(1, N), Y <- [1]], N]);
 
 setup_loop(N) when N>10 ->
-	Wid = spawn(?MODULE, make_watcher, [[[X, Y] || X <- lists:seq(N-9, N), Y <-	[1]], 10]),
+	spawn(?MODULE, make_watcher, [[[X, Y] || X <- lists:seq(N-9, N), Y <-	[1]], 10]),
 	setup_loop(N-10).
 
 make_watcher(Sensor_list, 0) ->
@@ -23,11 +22,13 @@ make_watcher(Sensor_list, 0) ->
 
 make_watcher(Sensor_list, N) when N>=1->
 	Sid = lists:nth(1, lists:nth(N, Sensor_list)),
-	{Pid, _} = spawn_monitor(sensor, run_sensor, [self(), Sid]),
+	{Pid, _} = spawn_monitor(sensor, sensor, [self(), Sid]),
 	make_watcher(lists:keyreplace(Sid, 1, Sensor_list, {Sid, Pid}), N-1).
 
 watcher(Sensor_list) ->
-	io:format("necessary print in watcher REMOVE ME LATER").
+	receive
+		{message, ok} -> stop
+	end.
 	%receives indefnitely
 	%if receives 1-10, print sensor number and measurement
 	%if receives crash, print sensor number, and crash
