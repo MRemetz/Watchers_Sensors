@@ -27,10 +27,6 @@ make_watcher(Sensor_list, N) when N>=1->
 
 watcher(Sensor_list) ->
 	receive
-		{message, ok} -> stop
-	end.
-	%receives indefnitely
-	%if receives 1-10, print sensor number and measurement
-	%if receives crash, print sensor number, and crash
-	%	spawn_monitor for that Sid, print updated list
-	%	call itself with updated Sensor_list
+		{Sid, Measurement} -> io:format("Measurement from ~w~n : ~w~n", [Sid, Measurement]);
+		{exit, Sid, Reason} -> io:format("~w~n exited with reason: ~w~n", [Sid, Reason]).
+	end. 
