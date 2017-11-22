@@ -1,5 +1,5 @@
 -module(sensor).
--compile(sensor/2).
+-compile(export_all).
 
-sensor(SNum, Wid) ->
+run_sensor(Wid, Sid) ->
 	io:format("created").
