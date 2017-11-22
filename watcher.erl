@@ -1,6 +1,5 @@
 -module(watcher).
 -compile(export_all).
--import(sensor, 
 
 start() ->
     {ok, [N]} = io:fread("enter number of sensors> ", "~d"),
@@ -24,7 +23,7 @@ make_watcher(Sensor_list, 0) ->
 
 make_watcher(Sensor_list, N) when N>=1->
 	Sid = lists:nth(1, lists:nth(N, Sensor_list)),
-	{Pid, _} = spawn_monitor(?MODULE, run_sensor, [self(), Sid]),
+	{Pid, _} = spawn_monitor(sensor, run_sensor, [self(), Sid]),
 	make_watcher(lists:keyreplace(Sid, 1, Sensor_list, {Sid, Pid}), N-1).
 
 watcher(Sensor_list) ->
